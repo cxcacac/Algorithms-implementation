@@ -1,7 +1,7 @@
 # Algorithms-implementation
 some implementation of classic algorithms, mainly to record the learning process.
 
-Detailed project structrue 
+Detailed project structure 
 
 ```
 ├── Dynamic Programming 
@@ -9,4 +9,5 @@ Detailed project structrue
 │ │ ├── Python implementation
 │ │ ├── Java implementation
 │ │ │...
+├── Sort Algorithm
 ```
