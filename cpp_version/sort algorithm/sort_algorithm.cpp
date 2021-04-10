@@ -50,21 +50,57 @@ void bubble_sort(vector<int>& nums){
    }
 }
 
-void merge_sort(vector<int>& nums){
+void helper_merge(vector<int>& nums, int left, int mid, int right){
+   int n1 = mid - left + 1;
+   int n2 = right - mid + 1;
+   int L[n1], R[n2];
+   for (int i = 0; i < n1; i++){
+      L[i] = nums[left + i];
+   }
+   for (int i = 0; i < n2; i++){
+      R[i] = nums[mid + i];
+   }
+   int k = left;
+   int p1 = 0, p2 = 0;
+   while(p1<n1 && p2<n2){
+      if(L[p1]>R[p2]){
+         nums[k++] = R[p2];
+      }else{
+         nums[k++] = L[p1];
+      }
+   }
+   while(p1<n1)
+      nums[k++] = L[p1];
+   while(p2<n2)
+      nums[k++] = R[p2];
+}
 
+void merge_sort(vector<int>& nums,int left, int right){
+   if(left>=right)
+      return;
+   int mid = (right - left)/2 + left;
+   // index right is included
+   merge_sort(nums, left, mid);
+   merge_sort(nums, mid+1, right);
+   helper_merge(nums, left, mid, right);
 }
 
 
+void print_array(vector<int>& nums, int arr_size){
+   for (int i = 0; i < arr_size; i++){
+      cout << nums[i] << " ";
+   }
+   cout << endl;
+}
+
 int main(){
    vector<int> a = {1, 23, 3, 4, 7, 90};
+   int arr_size = sizeof(a) / sizeof(a[0]);
    // selection_sort(a);
    // insert_sort(a);
    // bubble_sort(a);
-
-   int arr_size = sizeof(a) / sizeof(a[0]);
-   for (int i = 0; i < arr_size ;i++){
-      cout << a[i]<<" ";
-   }
+   merge_sort(a, 0, arr_size-1);
+   print_array(a, arr_size);
    cout << endl;
    return 0;
 }
