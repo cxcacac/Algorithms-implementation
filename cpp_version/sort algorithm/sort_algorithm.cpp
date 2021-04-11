@@ -1,9 +1,12 @@
+// #define NDEBUG
+
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <iterator>
 #include <unordered_map>
+#include <cassert>
 
 using namespace std;
 
@@ -184,6 +187,17 @@ int get_max(vector<int>& nums){
    return max_value;
 }
 
+int get_min(vector<int>& nums){
+   if(nums.empty())
+      return 0;
+   int min_value = nums[0];
+   int n = nums.size();
+   for (int i = 1; i < n; i++){
+      min_value = min(min_value, nums[i]);
+   }
+   return min_value;
+}
+
 void radix_sort_helper(vector<int>& nums, const int n, const int exp){
    vector<int> output(n);
    int cnt[10] = {0};
@@ -212,7 +226,24 @@ void radix_sort(vector<int>& nums){
 }
 
 void counting_sort(vector<int>& nums){
-
+   // creating large number of space.
+   // space complexity: O(large)-O(small)
+   int left = get_min(nums), right = get_max(nums);
+   int n = nums.size();
+   // right and left included.
+   vector<int> helper(right - left + 1, 0);
+   for (int i = 0; i < n;  i++){
+      helper[nums[i] - left]++;
+   }
+   int index = 0;
+   for (int i = 0; i < right - left + 1; i++){
+      while(helper[i]!=0){
+         assert(index < n);
+         nums[index] = i+left;
+         index++;
+         helper[i]--;
+      }
+   }
 }
 
 void print_array(vector<int>& nums, int arr_size){
