@@ -1,5 +1,5 @@
 // #define NDEBUG
-
+// cpp name is consistent with header
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,6 +7,8 @@
 #include <iterator>
 #include <unordered_map>
 #include <cassert>
+// header file included
+#include "sort_algorithm.h"
 
 using namespace std;
 
@@ -118,7 +120,6 @@ void quicksort(vector<int>& nums, int left, int right){
    quicksort(nums, left, sep-1);
    quicksort(nums, sep+1, right);
 }
-
 
 void shell_sort(vector<int>& nums){
    // shell compare the element with decreasing gap
@@ -253,19 +254,3 @@ void print_array(vector<int>& nums, int arr_size){
    cout << endl;
 }
 
-int main(){
-   vector<int> a = {1, 23, 3, 4, 7, 90};
-   int arr_size = sizeof(a) / sizeof(a[0]);
-   // selection_sort(a);
-   // insert_sort(a);
-   // bubble_sort(a);
-   // merge_sort(a, 0, arr_size-1);
-   // quicksort(a, 0, arr_size - 1);
-   // shell_sort(a);
-   // heap_sort(a);
-   // radix_sort(a);
-   counting_sort(a);
-   print_array(a, arr_size);
-   cout << endl;
-   return 0;
-}

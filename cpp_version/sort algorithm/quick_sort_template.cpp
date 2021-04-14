@@ -11,5 +11,17 @@ void quicksort(T data[], int low, int high, int(*comp)(T, T)){
 template<class T>
 int divide(T data[], int low, int high, int (*comp)(T, T)){
     T k = data[low];
-
+    do{
+        while(low < high && comp(data[high], k)>0)
+            --high;
+        if(low < high){
+            data[low] = data[high];
+        }
+        while(low < high && comp(data[low], k)<0) ++low;
+        if(low < high){
+            data[high] = data[low];
+        }
+    } while (low != high);
+    data[low] = k;
+    return low;
 }
