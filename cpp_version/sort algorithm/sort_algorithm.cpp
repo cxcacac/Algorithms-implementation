@@ -12,12 +12,12 @@
 
 using namespace std;
 
+// select the minimum value after current index, and swap. [sorted, unsorted]
 void selection_sort(vector<int>& nums){
    int n = nums.size();
    int k = 0;
    for (int i = 0; i < n; i++){
       k = i;
-      // find the index of minimum value
       for (int j = i+1; j < n; j++){
          if(nums[k]>nums[j]){
             k = j;
@@ -27,12 +27,12 @@ void selection_sort(vector<int>& nums){
    }
 }
 
+// insert the value to the sorted part. [sorted...unsorted]
 void insert_sort(vector<int>& nums){
    int n = nums.size();
    int j = 0;
    for (int i = 0; i < n; i++){
       j = i+1;
-      // if smaller, keep change the location of current element.
       while(j>0 && nums[j]<nums[j-1]){
          swap(nums[j], nums[j - 1]);
          j--;
@@ -40,6 +40,7 @@ void insert_sort(vector<int>& nums){
    }
 }
 
+// bubble up the value to sorted part. [unsorted, sorted]
 void bubble_sort(vector<int>& nums){
    int n = nums.size();
    bool flag = false;
@@ -51,17 +52,16 @@ void bubble_sort(vector<int>& nums){
             flag = true;
          }
       }
-      // if nothing happened, means array is sorted.
+      // if nothing happened, elements are in order.
       if(!flag)
          break;
    }
 }
 
+// divide and conqure, change array to small parts, use ptr to connect.
 void helper_merge(vector<int>& nums, int left, int mid, int right){
    const int n1 = mid - left + 1;
    const int n2 = right - mid;
-   // the dimension need to be a constexpr
-   // int L[n1], R[n2];
    vector<int> L(n1), R(n2);
    for (int i = 0; i < n1; i++){
       L[i] = nums[left + i];
@@ -87,7 +87,6 @@ void helper_merge(vector<int>& nums, int left, int mid, int right){
    while(p2<n2)
       nums[k++] = R[p2++];
 }
-
 void merge_sort(vector<int>& nums, int left, int right){
    if(left>=right)
       return;
@@ -98,9 +97,12 @@ void merge_sort(vector<int>& nums, int left, int right){
    helper_merge(nums, left, mid, right);
 }
 
+/*
+   - divide and conquer, use the last element as pivot.
+   - use ptr(smaller_index) to represent the location of values less than pivot.
+   - in partition, we must return the index at divisions.
+ */
 int quick_sort_partition(vector<int>& nums, int left, int right){
-   // take the last element(nums[right]) as a pivot
-   // place all the smaller elements to the left
    int pivot = nums[right];
    int smaller_index = 0;
    for (int i = 0; i < right; i++){
@@ -112,7 +114,6 @@ int quick_sort_partition(vector<int>& nums, int left, int right){
    swap(nums[smaller_index], nums[right]);
    return smaller_index;
 }
-
 void quicksort(vector<int>& nums, int left, int right){
    if(left>=right)
       return;
@@ -121,28 +122,35 @@ void quicksort(vector<int>& nums, int left, int right){
    quicksort(nums, sep+1, right);
 }
 
+/*
+   - shell compare the element with decreasing gap.
+   - the initial gap would be length/2, and gap = gap/2 for every loop until gap == 0;
+   - for each gap, the element is in order
+ */
+
 void shell_sort(vector<int>& nums){
-   // shell compare the element with decreasing gap
-   // the initial gap would be like length/2;
    int n = nums.size();
    int gap = n / 2;
    while(gap>0){
-      // for each gap, the element is in order
       for (int i = gap; i < n; i++){
          while(i-gap>=0 && nums[i]<nums[i-gap]){
             swap(nums[i], nums[i - gap]);
             i -= gap;
          }
       }
-      // change gap every loop
       gap /= 2;
    }
 }
 
+/*
+   - each heap is binary tree, we can use array to represent a tree;
+   - Index relations:
+      for parent node, i->(2i+1, 2i+2);
+      for child node, i->(i-1)/2
+   - heapify means arrange values which conforms to the codes of heap;
+*/
+
 void heapify(vector<int>& nums, int start, int end){
-   // each heap is binary tree, which means its node can be represented as index in array.
-   // for parent node, i->(2i+1, 2i+2);
-   // for child node, i->(i-1)/2
    int root = start;
    int child = 2 * start + 1;
    while(child <= end){
@@ -160,9 +168,7 @@ void heapify(vector<int>& nums, int start, int end){
       }
    }
 }
-
 void heap_sort(vector<int>& nums){
-   // the heapify maintain a big top pile
    int n = nums.size();
    // last element is n-1
    int bottom = (n - 1 - 1) / 2;
@@ -170,33 +176,10 @@ void heap_sort(vector<int>& nums){
    for (int i = bottom; i >= 0;i--){
       heapify(nums, i, n-1);
    }
-   // get element from top
    for (int i = n - 1; i > 0; i--){
       swap(nums[0], nums[i]);
       heapify(nums, 0, i-1);
    }
-}
-
-int get_max(vector<int>& nums){
-   if(nums.empty())
-      return 0;
-   int max_value = nums[0];
-   int n = nums.size();
-   for (int i = 1; i < n; i++){
-      max_value = max(max_value, nums[i]);
-   }
-   return max_value;
-}
-
-int get_min(vector<int>& nums){
-   if(nums.empty())
-      return 0;
-   int min_value = nums[0];
-   int n = nums.size();
-   for (int i = 1; i < n; i++){
-      min_value = min(min_value, nums[i]);
-   }
-   return min_value;
 }
 
 void radix_sort_helper(vector<int>& nums, const int n, const int exp){
@@ -245,6 +228,28 @@ void counting_sort(vector<int>& nums){
          helper[i]--;
       }
    }
+}
+
+int get_max(vector<int>& nums){
+   if(nums.empty())
+      return 0;
+   int max_value = nums[0];
+   int n = nums.size();
+   for (int i = 1; i < n; i++){
+      max_value = max(max_value, nums[i]);
+   }
+   return max_value;
+}
+
+int get_min(vector<int>& nums){
+   if(nums.empty())
+      return 0;
+   int min_value = nums[0];
+   int n = nums.size();
+   for (int i = 1; i < n; i++){
+      min_value = min(min_value, nums[i]);
+   }
+   return min_value;
 }
 
 void print_array(vector<int>& nums, int arr_size){
