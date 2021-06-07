@@ -1,7 +1,6 @@
-/**
- * https://ac.nowcoder.com/acm/contest/5647
-*/
-/* #include <iostream>
+// https://ac.nowcoder.com/acm/contest/5647
+
+#include <iostream>
 #include <istream>　　　　
 #include <ostream>
 #include <sstream>　　　　
@@ -13,10 +12,8 @@
 #include <queue>　　　　　
 #include <set>
 #include <stack>
-#include <map> */
-
-// we can use only one line to include all the headers
-#include <bits/stdc++.h>
+#include <map> 
+// use #include <bits/stdc++.h> 
 
 using namespace std;
 
