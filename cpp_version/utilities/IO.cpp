@@ -21,9 +21,12 @@ int main(){
     return 0;
 }
 
-void integerIO(){
-    // input: a b
-    // output: a+b
+void integerIO(){ 
+    /*     
+    * input: 
+        a b
+    * output: a+b 
+    */
     int a, b;
     while(scanf("%d %d", &a, &b)){
         printf("%d\n", a + b);
@@ -32,8 +35,12 @@ void integerIO(){
         cout << a + b << endl;
     }
 
-    // size
-    // 1, 2, 3
+    /*     
+    * input: 
+        size 
+        a b
+    * output: a+b 
+    */
     int t;
     int a, b;
     scanf("%d", &t);
@@ -42,14 +49,23 @@ void integerIO(){
         printf("%d\n", a + b);
     }
 
-    // end with a=0,b=0
+    /*     
+    * input: 
+        a b
+        0 0
+    * output: a+b 
+    */
     int a, b;
     while(scanf("%d %d", &a, &b) && a!=0 && b!=0){
         printf("%d\n", a + b);
     }
 
-    // size, 1, 2, 3
-    // size, 1, 2, 3
+    /*     
+    * input: 
+        size, a1, b1, c1
+        size, a1, b1, c1
+    * output: a+b+...
+    */
     int num;
     while(scanf("%d", &num)!=EOF){
         int val = 0;
@@ -60,10 +76,13 @@ void integerIO(){
         }
         printf("%d\n", val);
     }
-
-    // 1 2 3 4
-    // 1 2 3 4 5
-    // 1 2 3
+    /*     
+    * input: 
+        a1, b1, c1
+        a2, b2
+        a3, b3, c3, d3, ....
+    * output: a+b+...
+    */
     string input;
     while(getline(cin, input)){
         istringstream iss(input);
@@ -82,6 +101,7 @@ void integerIO(){
         printf("%ld\n", c);
     }
 }
+
 void stringIO(){
     // size = n
     // abc acd .... dfd
