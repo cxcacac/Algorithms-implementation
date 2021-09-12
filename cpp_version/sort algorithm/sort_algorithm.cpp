@@ -7,13 +7,18 @@
 #include <iterator>
 #include <unordered_map>
 #include <cassert>
-// header file included
-#include "sort_algorithm.h"
 
 using namespace std;
 
-// select the minimum value after current index, and swap. [sorted, unsorted]
-void selection_sort(vector<int>& nums){
+int getMax(vector<int>& nums){
+   return *max_element(nums.begin(), nums.end());
+}
+
+int getMin(vector<int>& nums){
+   return *min_element(nums.begin(), nums.end());
+}
+
+void selectionSort(vector<int>& nums){
    int n = nums.size();
    int k = 0;
    for (int i = 0; i < n; i++){
@@ -27,8 +32,7 @@ void selection_sort(vector<int>& nums){
    }
 }
 
-// insert the value to the sorted part. [sorted...unsorted]
-void insert_sort(vector<int>& nums){
+void insertSort(vector<int>& nums){
    int n = nums.size();
    int j = 0;
    for (int i = 0; i < n; i++){
@@ -40,8 +44,7 @@ void insert_sort(vector<int>& nums){
    }
 }
 
-// bubble up the value to sorted part. [unsorted, sorted]
-void bubble_sort(vector<int>& nums){
+void bubbleSort(vector<int>& nums){
    int n = nums.size();
    bool flag = false;
    for (int i = 1; i < n; i++){
@@ -52,74 +55,52 @@ void bubble_sort(vector<int>& nums){
             flag = true;
          }
       }
-      // if nothing happened, elements are in order.
       if(!flag)
          break;
    }
 }
 
-// divide and conqure, change array to small parts, use ptr to connect.
-void helper_merge(vector<int>& nums, int left, int mid, int right){
-   const int n1 = mid - left + 1;
-   const int n2 = right - mid;
-   vector<int> L(n1), R(n2);
-   for (int i = 0; i < n1; i++){
-      L[i] = nums[left + i];
-   }
-   for (int i = 0; i < n2; i++){
-      R[i] = nums[mid + i + 1];
-   }
-   int k = left;
-   int p1 = 0, p2 = 0;
-   while(p1<n1 && p2<n2){
-      if(L[p1]>R[p2]){
-         nums[k] = R[p2];
-         p2++;
-      }
-      else{
-         nums[k] = L[p1];
-         p1++;
-      }
-      k++;
-   }
-   while(p1<n1)
-      nums[k++] = L[p1++];
-   while(p2<n2)
-      nums[k++] = R[p2++];
-}
-void merge_sort(vector<int>& nums, int left, int right){
+void mergeSort(vector<int>& nums, int left, int right){
+   // right included.
    if(left>=right)
       return;
+
    int mid = (right - left)/2 + left;
-   // index right is included
-   merge_sort(nums, left, mid);
-   merge_sort(nums, mid+1, right);
-   helper_merge(nums, left, mid, right);
+   vector<int> tmp(right-left+1);
+   mergeSort(nums, left, mid);
+   mergeSort(nums, mid+1, right);
+
+   int i = left, j = mid+1;
+   int idx = 0;
+   while (i <= mid || j <= right){
+      if(j>right||nums[i]<=nums[j]){
+         tmp[idx++] = nums[i++];
+      }
+      else if(i>mid||nums[i]>nums[j]){
+         tmp[idx++] = nums[j++];
+      }
+   }
+   for (int i = left; i <= right; i++){
+      nums[i] = tmp[i-left];
+   }
 }
 
-/*
-   - divide and conquer, use the last element as pivot.
-   - use ptr(smaller_index) to represent the location of values less than pivot.
-   - in partition, we must return the index at divisions.
- */
-int quick_sort_partition(vector<int>& nums, int left, int right){
-   int pivot = nums[right];
-   int smaller_index = 0;
-   for (int i = 0; i < right; i++){
-      if(nums[i]<pivot){
-         swap(nums[i], nums[smaller_index]);
-         smaller_index++;
-      }
-   }
-   swap(nums[smaller_index], nums[right]);
-   return smaller_index;
-}
-void quicksort(vector<int>& nums, int left, int right){
+
+void quickSort(vector<int>& nums, int left, int right){
+   // right index included
    if(left>=right)
       return;
-   int sep = quick_sort_partition(nums, left, right);
-   quicksort(nums, left, sep-1);
-   quicksort(nums, sep+1, right);
+   int pivot = nums[right];
+   int idx = left;
+   for (int i = left; i < right; i++){
+      if(nums[i] < pivot){
+         swap(nums[i], nums[idx]);
+         idx++;
+      }
+   }
+   swap(nums[idx], nums[right]);
+   quickSort(nums, left, idx - 1);
+   quickSort(nums, idx+1, right);
 }
 
 /*
@@ -128,7 +109,7 @@ void quicksort(vector<int>& nums, int left, int right){
    - for each gap, the element is in order
  */
 
-void shell_sort(vector<int>& nums){
+void shellSort(vector<int>& nums){
    int n = nums.size();
    int gap = n / 2;
    while(gap>0){
@@ -202,7 +183,7 @@ void radix_sort_helper(vector<int>& nums, const int n, const int exp){
 }
 
 void radix_sort(vector<int>& nums){
-   int m = get_max(nums);
+   int m = getMax(nums);
    int n = nums.size();
    for (int exp = 1; m / exp > 0; exp*=10){
       radix_sort_helper(nums, n, exp);
@@ -212,7 +193,7 @@ void radix_sort(vector<int>& nums){
 void counting_sort(vector<int>& nums){
    // creating large number of space.
    // space complexity: O(large)-O(small)
-   int left = get_min(nums), right = get_max(nums);
+   int left = getMin(nums), right = getMax(nums);
    int n = nums.size();
    // right and left included.
    vector<int> helper(right - left + 1, 0);
@@ -230,32 +211,21 @@ void counting_sort(vector<int>& nums){
    }
 }
 
-int get_max(vector<int>& nums){
-   if(nums.empty())
-      return 0;
-   int max_value = nums[0];
-   int n = nums.size();
-   for (int i = 1; i < n; i++){
-      max_value = max(max_value, nums[i]);
-   }
-   return max_value;
-}
-
-int get_min(vector<int>& nums){
-   if(nums.empty())
-      return 0;
-   int min_value = nums[0];
-   int n = nums.size();
-   for (int i = 1; i < n; i++){
-      min_value = min(min_value, nums[i]);
-   }
-   return min_value;
-}
-
-void print_array(vector<int>& nums, int arr_size){
-   for (int i = 0; i < arr_size; i++){
+void print_array(vector<int>& nums, int l, int r){
+   for (int i = l; i <= r; i++){
       cout << nums[i] << " ";
    }
-   cout << endl;
 }
 
+int main(){
+   vector<int> nums;
+   int num;
+   while(cin>>num){
+      nums.push_back(num);
+   }
+   int size = nums.size();
+   cout << size << endl;
+   // merge_sort(nums, 0, size-1);
+   quickSort(nums, 0, size - 1);
+   print_array(nums, 0, size - 1);
+}
