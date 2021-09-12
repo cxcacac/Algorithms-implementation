@@ -152,7 +152,7 @@ void heapify(vector<int>& nums, int start, int end){
 void heap_sort(vector<int>& nums){
    int n = nums.size();
    // last element is n-1
-   int bottom = (n - 1 - 1) / 2;
+   int bottom = n / 2 - 1;
    // ensure parent value > child value
    for (int i = bottom; i >= 0;i--){
       heapify(nums, i, n-1);
