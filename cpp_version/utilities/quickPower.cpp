@@ -23,12 +23,14 @@ ll qpow_recursive(ll a, ll n){
 
 //iteratively, repress n by binary form, and use iterations
 ll qpow_iterative(ll a, ll n){
+    // use tmp to represent power of a;
+    ll tmp = a;
     ll res = 1;
     while(n>0){
         if(n%2==1){
-            res = res * a % (ll)MOD;
+            res = (res * tmp)% (ll)MOD;
         }
-        a = a * a;
+        tmp *= tmp;
         n >>= 1;
     }
     return res;
