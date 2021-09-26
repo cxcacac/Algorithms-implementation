@@ -7,6 +7,12 @@
 
 using namespace std;
 
+char* getMemory(){
+    char p[] = "Hello world";
+    return p;
+}
+
 int main(){
-    cout << stoi("asb,123") << endl;
+    char* p = getMemory();
+    cout << p << endl;
 }
